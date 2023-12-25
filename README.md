@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/9np4e78rbssk6tkr/branch/master?svg=true)](https://ci.appveyor.com/project/fjfoxru/vue3-noteballs/branch/master)
+
 # vue3-noteballs
 
 This template should help get you started developing with Vue 3 in Vite.
