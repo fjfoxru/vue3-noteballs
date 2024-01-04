@@ -16,12 +16,27 @@
                 </button>
             </template>
         </AddEditNote>
-
-        <Note
-                v-for="note in storeNotes.notes"
-                :key="note.id"
-                :note="note"
+        <progress
+          v-if="!storeNotes.notesLoaded"
+          class="progress is-large is-success"
+          max="100"
         />
+        <template
+          v-else
+        >
+
+            <Note
+                    v-for="note in storeNotes.notes"
+                    :key="note.id"
+                    :note="note"
+            />
+            <div
+              v-if="!storeNotes.notes.length"
+              class="is-size-4 has-text-centered has-text-grey-light is-family-monospace py-6"
+            >
+                Заметок пока нет...
+            </div>
+        </template>
 
     </div>
 </template>
@@ -32,6 +47,7 @@ import { ref } from 'vue'
 import Note from '@/components/Notes/Note.vue'
 import AddEditNote from '@/components/Notes/AddEditNote.vue'
 import { useStoreNotes } from '@/stores/storeNotes'
+import { useWatchCharacters } from '@/use/useWatchCharacters'
 
 const storeNotes = useStoreNotes()
 
@@ -43,5 +59,7 @@ const addNote = () => {
   newNote.value = ''
   addEditNoteRef.value.focusTextarea()
 }
+
+useWatchCharacters(newNote)
 
 </script>

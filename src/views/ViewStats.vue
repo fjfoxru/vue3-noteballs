@@ -1,6 +1,6 @@
 <template>
-    <div class="stats">
-        <table class="table is-fullwidth">
+    <div className="stats">
+        <table className="table is-fullwidth">
             <thead>
             <tr>
                 <th>Параметр</th>
@@ -18,13 +18,27 @@
             </tr>
             </tbody>
         </table>
+        <input
+          v-model="loveNoteballs"
+          className="input"
+          type="text"
+          placeholder="Краткий текст"
+          v-autofocus
+        />
     </div>
 </template>
 
 <script setup>
 
-import { useStoreNotes } from '@/stores/storeNotes'
+import {ref} from 'vue'
+import {useStoreNotes} from '@/stores/storeNotes'
+import {vAutofocus} from '@/directives/vAutofocus'
+import {useWatchCharacters} from '@/use/useWatchCharacters'
+
 
 const storeNotes = useStoreNotes()
+
+const loveNoteballs = ref('')
+useWatchCharacters(loveNoteballs, 50)
 
 </script>

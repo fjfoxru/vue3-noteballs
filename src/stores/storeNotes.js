@@ -1,38 +1,55 @@
 import { defineStore } from 'pinia'
+import {
+  collection, onSnapshot,
+  doc, deleteDoc, updateDoc, addDoc,
+  query, orderBy
+} from 'firebase/firestore'
+import { db } from '@/js/firebase'
+
+const notesCollectionRef = collection(db, 'notes')
+const notesCollectionQuery = query(notesCollectionRef, orderBy('date', 'desc'))
 
 export const useStoreNotes = defineStore('storeNotes', {
   state: () => {
     return {
-      notes: [
-        {
-          id: 'id1',
-          content: 'Первая заметка'
-        },
-        {
-          id: 'id2',
-          content: 'Вторая заметка'
-        }
-      ]
+      notes: [],
+      notesLoaded: false
     }
   },
   actions: {
-    addNote(newNoteContent) {
+    async getNotes() {
+      this.notesLoaded = false
+      onSnapshot(notesCollectionQuery, (querySnapshot) => {
+        let notes = []
+        querySnapshot.forEach((doc) => {
+          console.log(doc)
+          let note = {
+            id: doc.id,
+            content: doc.data().content,
+            date: doc.data().date
+          }
+          notes.push(note)
+        })
+        this.notes = notes
+        this.notesLoaded = true
+      })
+    },
+    async addNote(newNoteContent) {
       let currentDate = new Date().getTime(),
-        id = currentDate.toString()
+        date = currentDate.toString()
 
-      let note = {
-        id,
-        content: newNoteContent
-      }
-
-      this.notes.unshift(note)
+      await addDoc(notesCollectionRef, {
+        content: newNoteContent,
+        date
+      })
     },
-    deleteNote(idToDelete) {
-      this.notes = this.notes.filter(note => note.id !== idToDelete )
+    async deleteNote(idToDelete) {
+      await deleteDoc(doc(notesCollectionRef, idToDelete))
     },
-    updateNote(id, content) {
-      let index = this.notes.findIndex(note => note.id === id )
-      this.notes[index].content = content
+    async updateNote(id, content) {
+      await updateDoc(doc(notesCollectionRef, id), {
+        content
+      })
     }
   },
   getters: {
