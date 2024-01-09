@@ -1,23 +1,24 @@
 <template>
     <nav
-            class="navbar is-warning"
-            aria-label="main navigation"
-            role="navigation"
+      class="navbar is-success"
+      aria-label="main navigation"
+      role="navigation"
     >
         <div class="container is-max-desktop px-2">
             <div class="navbar-brand">
                 <div class="navbar-item is-size-4 is-family-monospace">
-                    Мои заметки
+                    Заметки
                 </div>
+
                 <a
-                        @click.prevent="showMobileNav = !showMobileNav"
-                        class="navbar-burger"
-                        :class="{ 'is-active' : showMobileNav }"
-                        aria-expanded="false"
-                        aria-label="menu"
-                        data-target="navbarBasicExample"
-                        role="button"
-                        ref="navbarBurgerRef"
+                  @click.prevent="showMobileNav = !showMobileNav"
+                  class="navbar-burger"
+                  :class="{ 'is-active' : showMobileNav }"
+                  aria-expanded="false"
+                  aria-label="menu"
+                  data-target="navbarBasicExample"
+                  role="button"
+                  ref="navbarBurgerRef"
                 >
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -26,25 +27,34 @@
             </div>
 
             <div
-                    id="navbarBasicExample"
-                    class="navbar-menu"
-                    ref="navbarMenuRef"
-                    :class="{ 'is-active' : showMobileNav }"
+              id="navbarBasicExample"
+              class="navbar-menu"
+              :class="{ 'is-active' : showMobileNav }"
+              ref="navbarMenuRef"
             >
-                <div class="navbar-end">
+                <div class="navbar-start">
+                    <button
+                      v-if="storeAuth.user.id"
+                      @click="logout"
+                      class="button is-small is-info mt-3 ml-3"
+                    >
+                        Выйти {{ storeAuth.user.email }}
+                    </button>
+                </div>
+                <div class="navbar-end" v-if="storeAuth.user.id">
                     <RouterLink
-                            @click="showMobileNav = false"
-                            to="/"
-                            class="navbar-item"
-                            active-class="is-active"
+                      @click="showMobileNav = false"
+                      to="/"
+                      class="navbar-item"
+                      active-class="is-active"
                     >
                         Заметки
                     </RouterLink>
                     <RouterLink
-                            @click="showMobileNav = false"
-                            to="/stats"
-                            class="navbar-item"
-                            active-class="is-active"
+                      @click="showMobileNav = false"
+                      to="/stats"
+                      class="navbar-item"
+                      active-class="is-active"
                     >
                         Статистика
                     </RouterLink>
@@ -58,6 +68,10 @@
 
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { useStoreAuth } from '@/stores/storeAuth'
+
+
+const storeAuth = useStoreAuth()
 
 const showMobileNav = ref(false)
 
@@ -69,6 +83,11 @@ onClickOutside(navbarMenuRef, () => {
 }, {
     ignore: [navbarBurgerRef]
 })
+
+const logout = () => {
+    showMobileNav.value = false
+    storeAuth.logoutUser()
+}
 
 </script>
 

@@ -2,6 +2,7 @@
 
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -19,7 +20,6 @@ const firebaseConfig = {
   projectId: "vue3-noteballs-6e22f",
 
   storageBucket: "vue3-noteballs-6e22f.appspot.com",
-
   messagingSenderId: "146787077472",
 
   appId: "1:146787077472:web:ca848f9b58d3eee0096205"
@@ -29,7 +29,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
+const auth = getAuth(app)
 
 export {
-  db
+  db,
+  auth
 }
