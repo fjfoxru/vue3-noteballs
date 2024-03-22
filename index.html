@@ -533,6 +533,13 @@ var series = container.children.push(am5hierarchy.ForceDirected.new(root, {
   centerStrength: 0.8
 }));
 
+  series.events.on("hit", ev => {
+    const data = JSON.stringify({hex: ev.target.dataItem.dataContext});
+        Telegram.WebApp.sendData(data);
+        Telegram.WebApp.close();
+    
+  })
+
 series.get("colors").setAll({
   step: 2
 });
